@@ -65,11 +65,9 @@ const loginCtrl = async (req, res) => {
 };
 
 const userProfileCtrl = async (req, res) => {
-  const userID = req.user.id;
+  const userID = res.locals.user.id;
 
   const user = await User.findById(userID);
-
-  if (!user) return console.log('User not found!');
 
   res.render('users/profile', { user });
 };

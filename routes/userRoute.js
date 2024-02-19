@@ -10,13 +10,13 @@ const isLoggedIn = require('../middlewares/isLoggedIn');
 const userRouter = express.Router();
 
 userRouter.get('/register', (req, res) => {
-  res.render('users/register', { error: '' });
+  res.render('users/register', { error: '', user: '' });
 });
 
 userRouter.post('/register', registerCtrl);
 
 userRouter.get('/login', (req, res) => {
-  res.render('users/login', { error: '' });
+  res.render('users/login', { error: '', user: '' });
 });
 
 userRouter.post('/login', loginCtrl);

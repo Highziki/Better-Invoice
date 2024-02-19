@@ -6,7 +6,7 @@ const isLoggedIn = (req, res, next) => {
 
   const verifiedToken = verifyToken(token);
 
-  if (verifiedToken) req.user = verifiedToken;
+  if (verifiedToken) res.locals.user = verifiedToken;
   else
     return res.render('errorPage', {
       error: 'Invalid/expired token, please log in again',

@@ -1,5 +1,12 @@
 <nav>
+  <% if (user?.id) { %>
+  <a href="/users/profile/<%=user?.id %>">Profile</a>
+  <a href="#">Customers</a>
+  <a href="#">Businesses</a>
+  <a href="#">Invoices</a>
+  <% } else{%>
+  <a href="/">Home</a>
   <a href="/users/register">Register</a>
   <a href="/users/login">Login</a>
-  <a href="/users/profile">Profile</a>
+  <% } %>
 </nav>
