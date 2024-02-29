@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Update</title>
+    <link rel="stylesheet" href="./../../styles.css" />
+  </head>
+  <body class="bg-neutral-100">
+    <%- include('./../partials/nav') %>
+
+    <div class="form-container my-[7%] mx-auto h-[24rem]">
+      <h1>Update</h1>
+
+      <% if (error) { %>
+      <i class="fas fa-exclamation-circle"></i>
+      <small class="text-red-500"> <%= error%> </small>
+      <% } %>
+      <form action="/users/user-update/<%= user?.id %>" method="post">
+        <div>
+          <label>Full Name:</label>
+          <input
+            type="text"
+            name="fullName"
+            class="home-input border-black"
+            id="name"
+            onfocus="onFocusName()"
+            oninput="fullNameValidator()"
+          />
+        </div>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            name="email"
+            class="home-input border-black"
+            id="email"
+            onfocus="onFocusEmail()"
+            oninput="emailValidator() "
+          />
+        </div>
+
+        <button type="submit" class="home-action-btn">Update</button>
+        <!-- <p>
+          Don't have an account?
+          <a href="/users/register" class="text-indigo-900">Register</a>
+        </p> -->
+      </form>
+    </div>
+    <script>
+      const toggleClass = (condition, element) => {
+        if (condition) {
+          element.classList.remove('border-[red]');
+          element.classList.remove('shadow-[red]');
+          element.classList.remove('shadow');
+          element.classList.remove('border-black');
+          element.classList.add('border-[#4dee4d]');
+          element.classList.add('shadow-[#4dee4d]');
+          element.classList.add('shadow-md');
+        } else {
+          element.classList.add('border-[red]');
+          element.classList.add('shadow-[red]');
+          element.classList.add('shadow');
+          element.classList.remove('border-black');
+          element.classList.remove('border-[#4dee4d]');
+          element.classList.remove('shadow-[#4dee4d]');
+          element.classList.remove('shadow-md');
+        }
+      };
+
+      const email = document.querySelector('#email');
+      const name = document.querySelector('#name');
+
+      function emailValidator() {
+        const value = email.value;
+        const firstValue = value.charAt(0);
+        const lastValue = value.endsWith('@');
+
+        toggleClass(
+          email.value.includes('@') && firstValue !== '@' && !lastValue,
+          email
+        );
+      }
+
+      function fullNameValidator() {
+        toggleClass(name.value, name);
+      }
+
+      function onFocusEmail() {
+        emailValidator();
+      }
+
+      function onFocusName() {
+        fullNameValidator();
+      }
+    </script>
+  </body>
+</html>

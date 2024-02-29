@@ -64,12 +64,103 @@ const loginCtrl = async (req, res) => {
   }
 };
 
+/**
+ * Since tailwind seems to be interferring
+ * with the params, a walk-around became necessary.
+ *
+ * The first element of the params array (params[0]) is the user
+ * id while the second element turns out to be styles.css for
+ * some reason.
+ *
+ * The curParams is the current params which will be updated if the
+ * page is reloaded. If the current params (curParams) does not match
+ * the user id (intialParams), an error 404 will the sent to
+ * the views.
+ */
+
+const params = [];
+
 const userProfileCtrl = async (req, res) => {
-  const userID = res.locals.user.id;
+  try {
+    const userID = res.locals.user.id;
 
-  const user = await User.findById(userID);
+    const curParams = req.params.id;
+    params.push(curParams);
 
-  res.render('users/profile', { user });
+    const initialParams = params[0];
+
+    if (initialParams !== curParams)
+      return res.render('errorPage', { error: '404. Not Found' });
+
+    const user = await User.findById(userID);
+
+    res.render('users/profile', { user });
+  } catch (error) {
+    res.render('errorPage', { error: error.message });
+  }
 };
 
-module.exports = { registerCtrl, loginCtrl, userProfileCtrl };
+const userDetailsCtrl = async (req, res) => {
+  try {
+    const userID = res.locals.user.id;
+
+    const curParams = req.params.id;
+    params.push(curParams);
+
+    const initialParams = params[0];
+
+    const user = await User.findById(userID);
+
+    if (initialParams !== curParams)
+      return res.render('errorPage', { error: '404. Not Found' });
+
+    res.render('users/updateUser', { user, error: '' });
+  } catch (error) {
+    res.render('errorPage', { error: error.message });
+  }
+};
+
+const updateUserCtrl = async (req, res) => {
+  const userID = res.locals.user.id;
+
+  // const user = await User.findById(userID);
+};
+
+const getUpdatePasswordForm = async (req, res) => {
+  const curParams = req.params.id;
+
+  const initialParams = params[0];
+
+  params.push(curParams);
+  if (initialParams !== curParams)
+    return res.render('errorPage', { error: '404. Not Found' });
+
+  res.render('users/updatePassword', { error: '' });
+};
+
+const updatePasswordCtrl = async (req, res) => {
+  const userID = res.locals.user.id;
+
+  const curParams = req.params.id;
+  params.push(curParams);
+
+  const initialParams = params[0];
+
+  if (initialParams !== curParams)
+    return res.render('errorPage', { error: '404. Not Found' });
+
+  const user = await User.findById(userID);
+};
+
+const uploadProfileImage = async (req, res) => {};
+
+module.exports = {
+  registerCtrl,
+  loginCtrl,
+  userProfileCtrl,
+  updateUserCtrl,
+  updatePasswordCtrl,
+  userDetailsCtrl,
+  uploadProfileImage,
+  getUpdatePasswordForm,
+};

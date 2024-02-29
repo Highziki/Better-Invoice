@@ -4,28 +4,41 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
+    <link rel="stylesheet" href="./../styles.css" />
   </head>
-  <body>
+  <body class="bg-neutral-100">
     <%- include('./../partials/nav') %>
 
-    <h1>Login</h1>
+    <div class="form-container my-[7%] mx-auto h-[24rem]">
+      <h1>Login</h1>
 
-    <% if (error) { %>
-    <i class="fas fa-exclamation-circle"></i>
-    <small> <%= error%> </small>
-    <% } %>
-    <form action="/users/login" method="post">
-      <div>
-        <label>Email:</label>
-        <input type="email" name="email" />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" name="password" />
-      </div>
+      <% if (error) { %>
+      <i class="fas fa-exclamation-circle"></i>
+      <small class="text-red-500"> <%= error%> </small>
+      <% } %>
 
-      <button type="submit">Login</button>
-      <p>Don't have an account? <a href="/users/register">Register</a></p>
-    </form>
+      <form action="/users/login" method="post">
+        <div>
+          <label>Email:</label>
+          <input type="email" name="email" class="home-input border-black" />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            name="password"
+            class="home-input border-black"
+          />
+        </div>
+
+        <button type="submit" class="home-action-btn">
+          <i class="fa-solid fa-right-to-bracket text-2xl"></i>
+        </button>
+        <p>
+          Don't have an account?
+          <a href="/users/register" class="text-indigo-900">Register</a>
+        </p>
+      </form>
+    </div>
   </body>
 </html>

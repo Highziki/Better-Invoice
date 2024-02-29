@@ -1,12 +1,26 @@
-<nav>
-  <% if (user?.id) { %>
-  <a href="/users/profile/<%=user?.id %>">Profile</a>
-  <a href="#">Customers</a>
-  <a href="#">Businesses</a>
-  <a href="#">Invoices</a>
-  <% } else{%>
-  <a href="/">Home</a>
-  <a href="/users/register">Register</a>
-  <a href="/users/login">Login</a>
-  <% } %>
-</nav>
+<script
+  src="https://kit.fontawesome.com/28b78926ca.js"
+  crossorigin="anonymous"
+></script>
+<link rel="stylesheet" href="./styles.css" />
+<div class="bg-slate-200">
+  <nav class="text-purple-800 p-5 text-xl sm:flex justify-between ml-5 mr-5">
+    <div>
+      <a href="/"> <i class="fa-solid fa-house text-3xl"></i></a>
+    </div>
+
+    <% if (user?.id) { %>
+    <div class="sm:flex sm:gap-2 ml-52">
+      <a href="/users/profile/<%=user?.id %>" class="px-4">Profile</a>
+      <a href="#" class="px-4">Customers</a>
+      <a href="#" class="px-4">Businesses</a>
+      <a href="#" class="px-4">Invoices</a>
+      <a href="" class="px-4">Logout</a>
+
+      <% } else{%>
+      <a href="/users/register" class="px-4">Register</a>
+      <a href="/users/login" class="px-4">Login</a>
+      <% } %>
+    </div>
+  </nav>
+</div>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Image</title>
+    <link rel="stylesheet" href="./../../styles.css" />
+  </head>
+  <body class="bg-neutral-100">
+    <%- include('./../partials/nav') %>
+
+    <div class="form-container my-[7%] mx-auto h-[24rem]">
+      <h1>Upload Image</h1>
+
+      <% if (error) { %>
+      <i class="fas fa-exclamation-circle"></i>
+      <small class="text-red-500"> <%= error%> </small>
+      <% } %>
+
+      <form
+        action="/users/upload-user-profile-image/<%= user?.id %>"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <input
+          type="file"
+          name="profile"
+          class="home-input border-transparent"
+        />
+
+        <button type="submit" class="home-action-btn">
+          <i class="fa-solid fa-upload"></i>
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

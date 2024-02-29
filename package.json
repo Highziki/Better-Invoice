@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "build": "tailwindcss build -i src/index.css -o public/styles.css --watch"
   },
   "keywords": [],
   "author": "Isaac Akinropo",

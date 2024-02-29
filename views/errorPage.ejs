@@ -4,11 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Error</title>
+    <link rel="stylesheet" href="./../../styles.css" />
   </head>
   <body>
-    <h2>Error</h2>
-    <h3><%= error %></h3>
+    <h1 class="text-center text-[3rem] mb-[30px]">Error</h1>
 
-    <a href="/">Go to Home</a>
+    <div>
+      <h3 class="w-full p-12 text-center text-3xl"><%= error %></h3>
+    </div>
+
+    <a href="/" class="error-btn">Go to Home</a>
   </body>
 </html>

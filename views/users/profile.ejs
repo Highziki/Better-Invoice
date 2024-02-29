@@ -3,13 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./../../styles.css" />
     <title>Profile</title>
   </head>
-  <body>
-    <h1>Profile Page</h1>
+  <body class="bg-[#f0eaea]">
     <%- include('./../partials/nav') %>
-    <h1>Full name: <%= user.fullName %></h1>
-    <h1>email: <%= user.email %></h1>
-    <img src="<%= user.profileImage %>" alt="profile-image" />
+    <main>
+      <h1 class="text-center text-4xl font-thin">Profile</h1>
+      <div class="m-6">
+        <div class="flex bg-[#fffefe] w-[12in] ml-16">
+          <img
+            src="<%= user.profileImage %>"
+            alt="profile-image"
+            class="p-8 w-[41%] object-cover"
+          />
+
+          <div class="flex flex-col justify-evenly text-2xl">
+            <div>
+              <i class="fa-regular fa-user"></i>
+              <span class="pl-2"><%= user.fullName %></span>
+            </div>
+
+            <div>
+              <i class="fa-regular fa-envelope"></i
+              ><span class="pl-2"><%= user.email %></span>
+            </div>
+
+            <div class="flex">
+              <div class="pr-[30px]">
+                <a href="/users/<%=user?._id %>" class="profile-action"
+                  ><i class="fa-regular fa-pen-to-square pr-2"></i
+                ></a>
+              </div>
+
+              <div class="pr-[30px]">
+                <a
+                  href="/users/upload-user-profile-image"
+                  class="profile-action"
+                  ><i class="fa-solid fa-camera"></i
+                ></a>
+              </div>
+
+              <div class="pr-[30px]">
+                <a
+                  href="/users/user-update-password/<%=user?._id %>"
+                  class="profile-action"
+                  >Change Password</a
+                >
+              </div>
+
+              <div>
+                <a href="#" class="profile-action">Logout</a>
+              </div>
+            </div>
+
+            <span>
+              <a href="#" class="view-invoices-btn"> View Invoices </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </main>
   </body>
 </html>
