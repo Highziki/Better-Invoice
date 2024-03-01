@@ -19,7 +19,7 @@
       <% } %>
 
       <form
-        action="/users/upload-user-profile-image/<%= user?.id %>"
+        action="/users/upload-user-profile-image/<%= user?.id %>?_method=PUT"
         method="post"
         enctype="multipart/form-data"
       >
