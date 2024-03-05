@@ -1,23 +1,23 @@
 const mongoose = require('mongoose');
 
 const businessSchema = new mongoose.Schema({
-  businessName: {
+  name: {
     type: String,
     required: true,
   },
-  businessLogo: {
+  logo: {
     type: String,
     required: true,
   },
-  businessAddress: {
+  address: {
     type: String,
     required: true,
   },
-  businessPhoneNumber: {
+  phoneNumber: {
     type: String,
     required: true,
   },
-  businessCountry: {
+  country: {
     type: String,
     required: true,
   },

@@ -2,6 +2,7 @@ require('dotenv').config(); // Dotenv Configuration
 require('./config/dbConnect');
 const express = require('express');
 const userRouter = require('./routes/userRoute');
+const customerRouter = require('./routes/customerRoute');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const verifyToken = require('./utils/verifyToken');
@@ -37,6 +38,9 @@ app.use((req, res, next) => {
 
 // Users Route
 app.use('/users', userRouter);
+
+// Customers Route
+app.use('/customers', customerRouter);
 
 // Home Route
 app.get('/', (req, res) => {
