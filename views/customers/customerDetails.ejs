@@ -1,0 +1,21 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Details</title>
+    <link rel="stylesheet" href="./../../styles.css" />
+  </head>
+  <body class="bg-[#f0eaea]">
+    <%- include('./../partials/nav') %>
+
+    <div class="grid grid-cols-4 gap-10">
+      <%- include('./../partials/profileActions') %>
+      <div class="col-span-3">
+        <h1><%= customer?.name %></h1>
+        <h1><%= customer?.phoneNumber %></h1>
+        <h1><%= customer?.address %></h1>
+        <h1><%= customer?.country %></h1>
+      </div>
+    </div>
+  </body>
+</html>

@@ -30,4 +30,33 @@ const fetchCustomersCtrl = async (req, res) => {
   res.render('customers/customers', { customers });
 };
 
-module.exports = { createCustomerCtrl, fetchCustomersCtrl };
+const fetchCustomerCtrl = async (req, res) => {
+  try {
+    const customerID = req.params.id;
+
+    const customer = await Customer.findById(customerID);
+
+    res.render('customers/customerDetails', { customer });
+  } catch (error) {
+    res.render('errorPage', { error: error.message });
+  }
+};
+
+const deleteCustomerCtrl = async (req, res) => {
+  try {
+    const customerID = req.params.id;
+
+    await Customer.findByIdAndDelete(customerID);
+
+    res.redirect('/customers');
+  } catch (error) {
+    res.render('errorPage', { error: error.message });
+  }
+};
+
+module.exports = {
+  createCustomerCtrl,
+  fetchCustomersCtrl,
+  fetchCustomerCtrl,
+  deleteCustomerCtrl,
+};
