@@ -10,11 +10,42 @@
 
     <div class="grid grid-cols-4 gap-10">
       <%- include('./../partials/profileActions') %>
-      <div class="col-span-3">
-        <h1><%= customer?.name %></h1>
-        <h1><%= customer?.phoneNumber %></h1>
-        <h1><%= customer?.address %></h1>
-        <h1><%= customer?.country %></h1>
+
+      <div class="col-span-3 m-6">
+        <div class="flex flex-col">
+          <h1 class="text-center text-3xl p-4">Name: <%= customer?.name %></h1>
+
+          <div class="flex flex-row justify-around mt-2 text-2xl">
+            <h3>Phone Number: <%= customer?.phoneNumber %></h3>
+            <h3>Country: <%= customer?.country %></h3>
+          </div>
+
+          <div class="text-xl mt-8">
+            <h1>Address: <%= customer?.address %></h1>
+          </div>
+
+          <div class="flex flex-row justify-end">
+            <a
+              href="/customers/<%=customer?._id %>"
+              class="border-2 border-indigo-500 px-3 py-1 bg-purple-700 text-white rounded-md text-xl hover:bg-purple-600 hover:scale-105 hover:text-2xl transition ease-in-out duration-300"
+            >
+              <i class="fa-solid fa-pen"></i> Edit
+            </a>
+          </div>
+
+          <div>
+            <h1 class="text-2xl text-center mt-6 mb-3">Invoices</h1>
+            <% if (customer?.invoices.length <= 0) { %> <%= customer?.name %>
+            does not have any issued invoices
+
+            <a
+              href="#top"
+              class="border-2 border-indigo-500 px-3 py-1 bg-purple-700 text-white rounded-md text-base hover:bg-purple-600 hover:scale-90 hover:text-lg transition ease-in-out duration-300"
+              >Create Invoice</a
+            >
+            <% } %>
+          </div>
+        </div>
       </div>
     </div>
   </body>
