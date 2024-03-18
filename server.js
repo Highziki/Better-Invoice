@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const verifyToken = require('./utils/verifyToken');
 const methodOverride = require('method-override');
+const businessRouter = require('./routes/businessRoute');
 
 const app = express();
 
@@ -41,6 +42,9 @@ app.use('/users', userRouter);
 
 // Customers Route
 app.use('/customers', customerRouter);
+
+// Business Route
+app.use('/businesses', businessRouter);
 
 // Home Route
 app.get('/', (req, res) => {

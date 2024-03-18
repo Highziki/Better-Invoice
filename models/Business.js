@@ -7,7 +7,8 @@ const businessSchema = new mongoose.Schema({
   },
   logo: {
     type: String,
-    required: true,
+    default:
+      'https://cdn5.vectorstock.com/i/1000x1000/77/94/your-logo-here-placeholder-symbol-vector-25817794.jpg',
   },
   address: {
     type: String,
