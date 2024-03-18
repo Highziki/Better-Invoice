@@ -74,7 +74,7 @@ userRouter.get('/user-update-password/:id', isLoggedIn, getUpdatePasswordForm);
 // PUT /users/user-update-password/:id
 userRouter.put('/user-update-password/:id', isLoggedIn, updatePasswordCtrl);
 
-// User Detai;s Route
+// User Details Route
 // GET /users/:id
 userRouter.get('/:id', isLoggedIn, userDetailsCtrl);
 
