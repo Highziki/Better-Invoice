@@ -9,10 +9,12 @@ const invoiceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  dueDate: {
-    type: String,
-    default: '15 days',
-  },
+  dueDate: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   items: [
     {
       type: String,
@@ -21,42 +23,33 @@ const invoiceSchema = new mongoose.Schema({
   ],
   quantities: [
     {
-      type: Number,
+      type: String,
       required: true,
     },
   ],
   rates: [
     {
-      type: Number,
+      type: String,
       required: true,
     },
   ],
   subTotals: [
     {
-      type: Number,
+      type: String,
       required: true,
     },
   ],
-  subTotal: {
-    type: Number,
-    required: true,
-  },
-  tax: {
-    type: Number,
-    default: 0,
-  },
   total: {
     type: Number,
     required: true,
   },
-
   business: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Business',
   },
   customer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Customer',
   },
 });
 

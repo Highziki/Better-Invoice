@@ -6,6 +6,7 @@ module.exports = {
     './views/partials/*.ejs',
     './views/customers/*.ejs',
     './views/businesses/*.ejs',
+    './views/invoices/*.ejs',
   ],
   theme: {
     extend: {},
