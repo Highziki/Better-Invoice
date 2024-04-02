@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Invoice</title>
+    <link rel="stylesheet" href="./../../styles.css" />
+  </head>
+  <body class="bg-[#f8f5f5]">
+    <h2 class="text-center text-2xl mt-4">Create Invoice</h2>
+
+    <form
+      class="m-10"
+      action="/invoices/update-invoice/<%=invoice?._id%>?_method=PUT"
+      method="post"
+    >
+      <header class="flex justify-evenly">
+        <div class="ml-10">
+          Date:
+          <input
+            type="date"
+            name="date"
+            id="curDate"
+            value="<%= invoice?.date%>"
+            required
+          />
+        </div>
+
+        <div class="ml-10">
+          Due Date:
+          <input
+            type="date"
+            name="dueDate"
+            id="dueDate"
+            value="<%=invoice?.dueDate[0]%>"
+            required
+          />
+          <input type="text" name="dueDate" id="hiddenDueDate" class="hidden" />
+          <span class="italic">(<i><%=invoice?.dueDate[1]%></i> days)</span>
+        </div>
+      </header>
+
+      <main class="mt-8">
+        <div class="text-center text-2xl">
+          Invoice No:<input
+            class="cursor-not-allowed"
+            value="<%=invoice?.number %>"
+            name="number"
+            readonly
+          />
+        </div>
+
+        <% invoice.items.forEach((item, i) => { %>
+        <section
+          class="bg-[#fffdfd] m-7 rounded-lg border-2 text-center p-9 pt-5 border-fuchsia-500"
+        >
+          <h3 class="text-2xl pb-3"><%=item %></h3>
+          <div class="flex justify-evenly" id="items-container">
+            <div class="flex flex-col">
+              <label>Item Name</label>
+              <input
+                type="text"
+                class="border-black border"
+                placeholder="Item 1"
+                oninput="itemNameListener()"
+                id="item-name"
+                name="items"
+                value="<%=item %>"
+                required
+              />
+            </div>
+
+            <div class="flex flex-col">
+              <label>Item Quantity</label>
+              <input
+                type="number"
+                class="border-black border"
+                placeholder="1"
+                name="quantities"
+                value="<%=invoice.quantities[i] %>"
+                required
+              />
+            </div>
+
+            <div class="flex flex-col">
+              <label>Item Rate</label>
+              <input
+                type="number"
+                class="border-black border"
+                placeholder="1"
+                name="rates"
+                value="<%=invoice.rates[i] %>"
+                required
+              />
+            </div>
+
+            <div class="flex flex-col">
+              <label>Item Total</label>
+              <input
+                type="number"
+                class="border-gray-300 border cursor-no-drop"
+                value="<%=invoice.subTotals[i] %>"
+                readonly
+              />
+            </div>
+
+            <div class="flex">
+              <span
+                onclick="removeItemListener()"
+                class="bg-[red] p-2 rounded-lg text-white text-xl transition duration-200 hover:scale-105 ease-in-out cursor-pointer"
+                >Remove</span
+              >
+            </div>
+          </div>
+        </section>
+        <% }) %>
+      </main>
+
+      <div class="flex justify-end mr-7">
+        <span
+          class="bg-[#48d448] p-2 rounded-lg text-white text-xl transition duration-200 hover:scale-105 ease-in-out cursor-pointer"
+          id="add-item"
+          onclick="addItemListener()"
+          ><b class="text-2xl">+</b> Add Item</span
+        >
+      </div>
+
+      <div class="flex justify-end m-5">
+        <label class="mr-2">Sub Total: </label>
+        <input
+          type="number"
+          id="subTotal"
+          value="<%=invoice.total %>"
+          class="border border-black cursor-not-allowed"
+          readonly
+        />
+      </div>
+
+      <div class="flex justify-end m-5">
+        <label class="mr-2">Tax: </label>
+        <input
+          type="number"
+          min="0"
+          max="100"
+          placeholder="0"
+          value="<%=invoice.tax %>"
+          name="tax"
+          id="tax"
+          class="border border-black"
+        />%
+      </div>
+
+      <div class="flex justify-end m-5">
+        <label class="mr-2">Grand Total: </label>
+        <input
+          type="number"
+          name=""
+          id="grandTotal"
+          value="<%=invoice.grandTotal %>"
+          class="border border-black cursor-not-allowed"
+          readonly
+        />
+      </div>
+
+      <div class="flex justify-center mt-9">
+        <button
+          class="text-2xl bg-cyan-800 text-white px-40 py-2 rounded-md transition ease-in-out hover:scale-105 duration-500"
+          type="submit"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+
+    <script>
+            const main = document.querySelector('main');
+            const dateDiff = document.querySelector('i');
+
+            const from = document.querySelector('#from');
+            const to = document.querySelector('#to');
+            const curDate = document.querySelector('#curDate');
+            const dueDate = document.querySelector('#dueDate');
+            const hiddenDueDate = document.querySelector('#hiddenDueDate');
+
+            const addItem = document.querySelector('#addItem');
+            const itemsContainer = document.querySelectorAll('#items-container');
+
+            const subTotal = document.querySelector('#subTotal');
+            const tax = document.querySelector('#tax');
+            const grandTotal = document.querySelector('#grandTotal');
+
+            let val = 0;
+      let addItemCount = 0
+            const total = [];
+
+            hiddenDueDate.value = dateDiff.textContent;
+
+            <!-- Calculate Date Difference -->
+            const dateDiffCalculator = function () {
+              hiddenDueDate.value = dateDiff.textContent =
+                (Date.parse(dueDate.value) - Date.parse(curDate.value)) /
+                (1000 * 60 * 60 * 24);
+            };
+
+            curDate.addEventListener('input', dateDiffCalculator);
+
+            dueDate.addEventListener('input', dateDiffCalculator);
+
+            const removeItemListener = () => {
+              const allSections = [...main.children];
+
+              allSections.forEach((ele, i) => {
+                if (!ele.textContent.includes('Invoice')) {
+                  const removeElement =
+                    ele.children[1].lastElementChild.lastElementChild;
+
+                  removeElement.addEventListener('click', () => {
+                    const items = [...ele.children[1].children];
+
+                    items.forEach((ele, i, arr) => {
+                      if (i < arr.length - 1)
+                        ele.lastElementChild.setAttribute('disabled', true);
+                    });
+
+                    ele.classList.add('hidden');
+                  });
+                }
+              });
+            };
+
+            tax.addEventListener('input', () => {
+              grandTotal.value =
+                +subTotal.value + (+tax.value / 100) * +subTotal.value;
+            });
+
+            function toggleClass(element) {
+              if (element.value) {
+                element.classList.add('border-[#4dee4d]');
+                element.classList.add('shadow-[#4dee4d]');
+                element.classList.add('shadow-md');
+                element.classList.remove('border-[red]');
+                element.classList.remove('shadow-[red]');
+                element.classList.remove('border-black');
+              } else {
+                element.classList.remove('border-black');
+                element.classList.add('border-[red]');
+                element.classList.add('shadow-md');
+                element.classList.add('shadow-[red]');
+              }
+            }
+
+            const calcTotalsListener = () => {
+              const allSections = [...main.children];
+
+              allSections.forEach((ele, i) => {
+                if (i > 0) {
+                  const itemQuantity =
+                    ele.children.namedItem('items-container').children[1].children[1];
+                  const itemRate =
+                    ele.children.namedItem('items-container').children[2].children[1];
+                  const itemTotal =
+                    ele.children.namedItem('items-container').children[3].children[1];
+
+                  itemQuantity.setAttribute('value', itemQuantity.value);
+
+                  itemRate.setAttribute('value', itemRate.value);
+
+                  itemTotal.setAttribute('value', itemTotal.value);
+
+                  itemQuantity.addEventListener('input', () => {
+                    itemTotal.value = +itemQuantity.value * +itemRate.value;
+
+                    itemQuantity.setAttribute('value', itemQuantity.value);
+
+                    itemRate.setAttribute('value', itemRate.value);
+
+                    itemTotal.setAttribute('value', +itemTotal.value);
+
+                    toggleClass(itemQuantity);
+                  });
+
+                  let click = 0;
+                  itemRate.addEventListener('input', () => {
+                    click++;
+
+                    itemTotal.value = +itemQuantity.value * +itemRate.value;
+
+                    +itemQuantity.setAttribute('value', itemQuantity.value) +
+                      itemRate.setAttribute('value', itemRate.value) +
+                      itemTotal.setAttribute('value', itemTotal.value) +
+                      itemTotal.setAttribute('click', click);
+
+                    if (+itemTotal.getAttribute('click') === 1)
+                      total.push(`${+itemTotal.getAttribute('value')} ${i}`);
+                    else {
+                      total.splice(
+                        total.findLastIndex(ele => +ele.slice(-1) === i),
+                        1,
+                        `${+itemTotal.getAttribute('value')} ${i}`
+                      );
+
+                      const values = total.map(ele => Number.parseInt(ele));
+                      subTotal.value = values.reduce((prev, cur) => (prev += cur));
+
+                      grandTotal.value =
+                        +subTotal.value + (+tax.value / 100) * +subTotal.value;
+                    }
+
+                    toggleClass(itemRate);
+                  });
+                }
+              });
+            };
+
+            calcTotalsListener();
+
+            const itemNameListener = function () {
+              const mainItems = [...main.children];
+
+              mainItems.forEach((ele, i) => {
+                if (!ele.textContent.includes('Invoice No')) {
+                  const itemName = ele.children[1].children[0].children[1];
+                  const itemNameHeader = ele.children[0];
+
+                  itemName.addEventListener('input', () => {
+                    itemNameHeader.textContent = itemName.value;
+                  });
+
+                  toggleClass(itemName);
+                }
+              });
+            };
+
+            function addItemListener() {
+              const mainItems = [...main.children];
+               addItemCount = mainItems.length ;
+
+              main.innerHTML += `<section
+              class="bg-[#fffdfd] m-7 rounded-lg border-2 text-center p-9 pt-5 border-fuchsia-500"
+            >
+              <h3 class="text-2xl pb-3">Item ${addItemCount}</h3>
+              <div class="flex justify-evenly"   id="items-container">
+                <div class="flex flex-col">
+                  <label>Item Name</label>
+
+                  <input
+                    type="text"
+                    class="border-black border"
+                    placeholder="Item ${addItemCount}"
+                    oninput="itemNameListener()"
+                    id="item-name"
+                    name="items"
+                    required
+                  />
+                </div>
+
+                <div class="flex flex-col">
+                  <label>Item Quantity</label>
+
+                  <input
+                    type="number"
+                    class="border-black border"
+                    placeholder="1"
+                    name="quantities"
+                    required
+                  />
+                </div>
+
+                <div class="flex flex-col">
+                  <label>Item Rate</label>
+
+                  <input
+                    type="number"
+                    class="border-black border"
+                    placeholder="1"
+                    name="rates"
+                    required
+                  />
+                </div>
+
+                <div class="flex flex-col">
+                  <label>Item Total</label>
+
+                  <input
+                    type="number"
+                    class="border-gray-300 border cursor-no-drop"
+                    value=""
+                    readonly
+                  />
+                </div>
+
+                <div class="flex">
+                  <span
+                  onclick="removeItemListener()"
+                    class="bg-[red] p-2 rounded-lg text-white text-xl transition duration-200 hover:scale-105 ease-in-out cursor-pointer"
+                    >Remove</span
+                  >
+                </div>
+              </div>
+            </section>`;
+
+              calcTotalsListener();
+
+
+              mainItems.forEach((ele, i, arr) => {
+                if (!ele.textContent.includes('Invoice No') && i < arr.length - 1) {
+                  const itemName = ele.children[1].children[0].children[1];
+                  const itemNameHeader = ele.children[0];
+                  itemName.value = itemNameHeader.textContent;
+                }
+              });
+            }
+    </script>
+  </body>
+</html>

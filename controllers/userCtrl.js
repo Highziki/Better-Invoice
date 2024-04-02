@@ -45,7 +45,7 @@ const registerCtrl = async (req, res) => {
     });
 
     // Redirect to home page
-    res.redirect('/');
+    res.redirect('/users/login');
   } catch (error) {
     res.render('errorPage', { error: error.message });
   }

@@ -15,57 +15,85 @@
       <main class="col-span-3">
         <div class="flex flex-col">
           <div><h1 class="text-center text-3xl p-4">Invoices</h1></div>
-
-          <% if (user?.invoices?.length === 0) { %>
-          <div class="flex">
-            <h1>You have no invoice</h1>
-
-            <span class="ml-2">
+          <% if (user.invoices.length >= 1) { %>
+          <div class="flex justify-end mr-7">
+            <a
+              href="/invoices/create-invoice"
+              class="bg-[#48d448] p-2 rounded-lg text-white text-xl transition duration-200 hover:scale-105 ease-in-out cursor-pointer"
+              id="add-item"
+              ><b class="text-2xl">+</b>New Invoice</a
+            >
+          </div>
+          <% } %> <% if (user.invoices.length === 0) { %>
+          <div>
+            <div class="flex justify-center mt-16">
               <a
                 href="/invoices/create-invoice"
-                class="border-2 border-indigo-500 px-3 py-1 bg-purple-700 text-white rounded-md text-base hover:bg-purple-600 hover:scale-90 hover:text-[17px] transition ease-in-out duration-300"
+                class="bg-[#48d448] py-3 px-6 rounded-lg text-white text-2xl transition duration-200 hover:scale-105 ease-in-out cursor-pointer"
+                id="add-item"
                 >Create Invoice</a
               >
-            </span>
-          </div>
-
-          <% } %> <% user.invoices?.forEach(invoice => { %>
-          <div
-            class="bg-[#fffdfd] m-3 rounded-3xl border-2 text-center p-3 border-blue-300"
-          >
-            <h3 class="text-xl">Invoice No: <%= invoice?.number %></h3>
-
-            <h3>Date: <%= invoice?.date %></h3>
-
-            <div class="flex flex-row justify-around mt-2 text-xl">
-              <h3>From: <%= invoice?.business %></h3>
-              <h3>To: <%= invoice?.customer %></h3>
-            </div>
-
-            <div class="mt-2 pt-4 pr-8">
-              <div class="flex justify-end">
-                <a href="/invoices/invoice/<%#= invoice?._id %>" class="mr-32"
-                  ><span
-                    class="border-2 border-indigo-500 px-3 py-1 bg-purple-700 text-white rounded-md text-xl hover:bg-purple-600 hover:scale-105 hover:text-[22px] transition ease-in-out duration-300"
-                    >View</span
-                  ></a
-                >
-
-                <form
-                  action="/invoices/delete-invoice/<%#= invoice?._id %>?_method=DELETE"
-                  method="post"
-                >
-                  <button>
-                    <i
-                      class="fa-solid fa-trash-can text-xl text-[red] hover:scale-105 hover:text-[21px] transition ease-in-out cursor-pointer"
-                      title="Delete Invoice"
-                    ></i>
-                  </button>
-                </form>
-              </div>
             </div>
           </div>
-          <% }) %>
+
+          <% } %>
+          <div class="mr-7 mt-5">
+            <table class="w-full text-sm text-left text-gray-500">
+              <thead class="text-base text-white uppercase bg-blue-700">
+                <tr>
+                  <th class="px-6 py-3">Invoice No.</th>
+                  <th class="px-6 py-3">Date</th>
+                  <th class="px-6 py-3">Business</th>
+                  <th class="px-6 py-3">Customer</th>
+                  <th class="px-6 py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% user?.invoices.reverse().forEach((invoice) => {%>
+                <tr
+                  class="border-blue-800 even:bg-gray-300 odd:bg-gray-100 even:text-black odd:text-black border-b odd:hover:bg-white even:hover:bg-gray-200 text-base"
+                >
+                  <td class="px-6 py-4 border border-purple-700">
+                    <%= invoice?.number%>
+                  </td>
+                  <td class="px-6 py-4 border border-purple-700">
+                    <%= invoice?.date%>
+                  </td>
+                  <td class="px-6 py-4 border border-purple-700">
+                    <%= invoice?.business.name %>
+                  </td>
+                  <td class="px-6 py-4 border border-purple-700">
+                    <%= invoice?.customer?.name %>
+                  </td>
+                  <td class="px-6 py-4 border border-purple-700">
+                    <div class="flex">
+                      <a
+                        href="/invoices/invoice/<%= invoice?._id %>"
+                        class="mr-9"
+                        ><span
+                          class="border-2 border-indigo-500 even: px-2 py-1 bg-purple-700 text-white rounded-md text-base hover:bg-purple-600 hover:scale-105 transition ease-in-out duration-300"
+                          >View</span
+                        ></a
+                      >
+
+                      <form
+                        action="/invoices/delete-invoice/<%= invoice?._id %>?_method=DELETE"
+                        method="post"
+                      >
+                        <button>
+                          <i
+                            class="fa-solid fa-trash-can text-xl text-[red] hover:scale-110 transition ease-in-out cursor-pointer"
+                            title="Delete Invoice"
+                          ></i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
         </div>
       </main>
     </div>

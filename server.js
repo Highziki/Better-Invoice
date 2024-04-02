@@ -61,4 +61,9 @@ app.all('*', (req, res) => {
 
 const PORT = process.env.PORT || 9000;
 
-app.listen(PORT, console.log(`Server up and running on port ${PORT}`));
+const server = app.listen(
+  PORT,
+  console.log(`Server up and running on port ${PORT}`)
+);
+
+server.keepAliveTimeout = 15 * 1000;

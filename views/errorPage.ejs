@@ -10,9 +10,17 @@
     <h1 class="text-center text-[3rem] mb-[30px]">Error</h1>
 
     <div>
+      <% if (error.includes('mongodb')) { %>
+      <h3 class="w-full p-12 text-center text-3xl">
+        Connection error, please check your network or router and try again
+      </h3>
+      <% }else{ %>
       <h3 class="w-full p-12 text-center text-3xl"><%= error %></h3>
+      <% } %>
     </div>
 
-    <a href="/" class="error-btn">Go to Home</a>
+    <div class="flex justify-center">
+      <a href="/" class="error-btn">Go to Home</a>
+    </div>
   </body>
 </html>

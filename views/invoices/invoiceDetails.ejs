@@ -1,0 +1,119 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice Details</title>
+    <link rel="stylesheet" href="./../../styles.css" />
+  </head>
+  <body>
+    <div class="grid grid-cols-4 gap-10">
+      <%- include('./../partials/profileActions') %>
+
+      <main class="col-span-3">
+        <h1 class="text-center text-3xl pt-4 m-2">
+          Invoice No: <%=invoice?.number%>
+        </h1>
+
+        <div class="flex justify-between text-xl m-2">
+          <h1>Date: <%=invoice?.date%></h1>
+          <h1 class="pr-12">Date: <%=invoice?.dueDate[0]%></h1>
+        </div>
+
+        <div class="flex justify-between mt-7">
+          <div
+            class="border-2 border-dashed rounded-lg border-gray-400 pt-5 pl-4 pr-9"
+          >
+            <div class="flex flex-col">
+              <span class="text-lg font-semibold text-[blue]"
+                >Your Details:</span
+              >
+              <span class="uppercase text-sm pt-1 font-semibold">From</span>
+              <span class="text-xl font-medium italic"
+                ><%=invoice?.business?.name%></span
+              ><span class="text-lg text-pretty"
+                ><%=invoice?.business?.address%></span
+              >
+              <span class="text-base pt-2 font-medium uppercase"
+                ><%=invoice?.business?.country%></span
+              >
+            </div>
+          </div>
+
+          <div
+            class="border-2 border-dashed rounded-lg border-gray-400 py-5 pl-4 pr-9 mx-6"
+          >
+            <div class="flex flex-col">
+              <span class="text-lg font-semibold text-[blue]"
+                >Client's Details:</span
+              >
+              <span class="uppercase text-sm pt-1 font-semibold">To</span>
+              <span class="text-xl font-medium italic"
+                ><%=invoice?.business?.name%></span
+              ><span class="text-lg text-pretty"
+                ><%=invoice?.business?.address%></span
+              >
+              <span class="text-base pt-2 font-medium uppercase"
+                ><%=invoice?.business?.country%></span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="mr-7 mt-9">
+          <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-base text-white uppercase bg-blue-700">
+              <tr>
+                <th class="px-6 py-3">Item Name</th>
+                <th class="px-6 py-3">Quantity</th>
+                <th class="px-6 py-3">Rates</th>
+                <th class="px-6 py-3">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% invoice?.quantities?.forEach ((quantity, i) => { %>
+              <tr
+                class="border-blue-800 even:bg-gray-300 odd:bg-gray-100 even:text-black odd:text-black border-b odd:hover:bg-white even:hover:bg-gray-200 text-lg"
+              >
+                <td class="px-6 py-4 border border-purple-700">
+                  <%= invoice?.items[i]%>
+                </td>
+                <td class="px-6 py-4 border border-purple-700">
+                  <%= quantity%>
+                </td>
+                <td class="px-6 py-4 border border-purple-700">
+                  <%= invoice?.rates[i]%>
+                </td>
+                <td class="px-6 py-4 border border-purple-700">
+                  <%= invoice?.subTotals[i]%>
+                </td>
+              </tr>
+              <%}) %>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex flex-col items-end mr-7 my-5 text-xl">
+          <h1 class="pb-2">Sub Total: #<%=invoice.total%></h1>
+          <% if (invoice.tax) { %>
+          <h1 class="pb-2">Tax: <%=invoice.tax%>%</h1>
+          <% } %>
+          <h1 class="pb-2">Grand Total: #<%=invoice.grandTotal%></h1>
+        </div>
+
+        <div class="flex flex-row justify-end">
+          <a
+            href="/invoices/<%=invoice?._id %>"
+            class="border-2 border-indigo-500 px-3 py-1 bg-purple-700 text-white rounded-md text-xl hover:bg-purple-600 hover:scale-105 transition ease-in-out duration-300 mr-3"
+          >
+            <i class="fa-solid fa-pen" title="Edit Invoice"></i>
+          </a>
+          <!-- 
+          <a
+            class="border-2 border-indigo-500 px-3 py-1 bg-purple-700 text-white rounded-md text-base hover:bg-purple-600 hover:scale-105 transition ease-in-out duration-300 mr-3"
+            >Download As Pdf</a
+          > -->
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -79,7 +79,15 @@ const fetchCustomerCtrl = async (req, res) => {
       return res.render('errorPage', { error: '404. Not found' });
 
     // Find customer
-    const customer = await Customer.findById(customerID);
+    const customer = await Customer.findById(customerID)
+      .populate({
+        path: 'invoices',
+        populate: { path: 'business' },
+      })
+      .populate({
+        path: 'invoices',
+        populate: { path: 'customer' },
+      });
 
     // Render customerDetails page
     res.render('customers/customerDetails', { customer });

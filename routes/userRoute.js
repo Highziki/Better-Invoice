@@ -41,7 +41,7 @@ userRouter.post('/login', loginCtrl);
 
 // Login Route
 // GET /users/logout
-userRouter.get('/logout', isLoggedIn, logoutCtrl);
+userRouter.get('/logout', logoutCtrl);
 
 // Upload Profile Image Route
 // GET /users//upload-user-profile-image

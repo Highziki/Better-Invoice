@@ -84,7 +84,7 @@
           <h3 class="text-2xl pb-3">Item 1</h3>
           <div class="flex justify-evenly" id="items-container">
             <div class="flex flex-col">
-              <label for="">Item Name</label>
+              <label>Item Name</label>
               <input
                 type="text"
                 class="border-black border"
@@ -97,7 +97,7 @@
             </div>
 
             <div class="flex flex-col">
-              <label for="">Item Quantity</label>
+              <label>Item Quantity</label>
               <input
                 type="number"
                 class="border-black border"
@@ -108,7 +108,7 @@
             </div>
 
             <div class="flex flex-col">
-              <label for="">Item Rate</label>
+              <label>Item Rate</label>
               <input
                 type="number"
                 class="border-black border"
@@ -119,9 +119,8 @@
             </div>
 
             <div class="flex flex-col">
-              <label for="">Item Total</label>
+              <label>Item Total</label>
               <input
-                name="subTotals"
                 type="number"
                 class="border-gray-300 border cursor-no-drop"
                 readonly
@@ -148,6 +147,40 @@
         >
       </div>
 
+      <div class="flex justify-end m-5">
+        <label class="mr-2">Sub Total: </label>
+        <input
+          type="number"
+          id="subTotal"
+          class="border border-black cursor-not-allowed"
+          readonly
+        />
+      </div>
+
+      <div class="flex justify-end m-5">
+        <label class="mr-2">Tax: </label>
+        <input
+          type="number"
+          min="0"
+          max="100"
+          placeholder="0"
+          name="tax"
+          id="tax"
+          class="border border-black"
+        />%
+      </div>
+
+      <div class="flex justify-end m-5">
+        <label class="mr-2">Grand Total: </label>
+        <input
+          type="number"
+          name=""
+          id="grandTotal"
+          class="border border-black cursor-not-allowed"
+          readonly
+        />
+      </div>
+
       <div class="flex justify-center mt-9">
         <button
           class="text-2xl bg-cyan-800 text-white px-40 py-2 rounded-md transition ease-in-out hover:scale-105 duration-500"
@@ -159,29 +192,38 @@
     </form>
 
     <script>
+      const main = document.querySelector('main');
+      const dateDiff = document.querySelector('i');
+
       const from = document.querySelector('#from');
       const to = document.querySelector('#to');
       const curDate = document.querySelector('#curDate');
       const dueDate = document.querySelector('#dueDate');
-      const addItem = document.querySelector('#addItem');
-      const main = document.querySelector('main');
-      const itemsContainer = document.querySelectorAll('#items-container');
-      const dateDiff = document.querySelector('i');
       const hiddenDueDate = document.querySelector('#hiddenDueDate');
+
+      const addItem = document.querySelector('#addItem');
+      const itemsContainer = document.querySelectorAll('#items-container');
+
+      const subTotal = document.querySelector('#subTotal');
+      const tax = document.querySelector('#tax');
+      const grandTotal = document.querySelector('#grandTotal');
+
+      let val = 0;
+      let addItemCount = 1;
+      const total = [];
 
       hiddenDueDate.value = dateDiff.textContent;
 
-      curDate.addEventListener('input', () => {
+      <!-- Calculate Date Difference -->
+      const dateDiffCalculator = function () {
         hiddenDueDate.value = dateDiff.textContent =
           (Date.parse(dueDate.value) - Date.parse(curDate.value)) /
           (1000 * 60 * 60 * 24);
-      });
+      };
 
-      dueDate.addEventListener('input', () => {
-        hiddenDueDate.value = dateDiff.textContent =
-          (Date.parse(dueDate.value) - Date.parse(curDate.value)) /
-          (1000 * 60 * 60 * 24);
-      });
+      curDate.addEventListener('input', dateDiffCalculator);
+
+      dueDate.addEventListener('input', dateDiffCalculator);
 
       const removeItemListener = () => {
         const allSections = [...main.children];
@@ -193,148 +235,136 @@
 
             removeElement.addEventListener('click', () => {
               const items = [...ele.children[1].children];
+
               items.forEach((ele, i, arr) => {
                 if (i < arr.length - 1)
                   ele.lastElementChild.setAttribute('disabled', true);
               });
+
               ele.classList.add('hidden');
             });
           }
         });
       };
 
-      const listener = () => {
+      tax.addEventListener('input', () => {
+        grandTotal.value =
+          +subTotal.value + (+tax.value / 100) * +subTotal.value;
+      });
+
+      function toggleClass(element) {
+        if (element.value) {
+          element.classList.add('border-[#4dee4d]');
+          element.classList.add('shadow-[#4dee4d]');
+          element.classList.add('shadow-md');
+          element.classList.remove('border-[red]');
+          element.classList.remove('shadow-[red]');
+          element.classList.remove('border-black');
+        } else {
+          element.classList.remove('border-black');
+          element.classList.add('border-[red]');
+          element.classList.add('shadow-md');
+          element.classList.add('shadow-[red]');
+        }
+      }
+
+      const calcTotalsListener = () => {
         const allSections = [...main.children];
 
         allSections.forEach((ele, i) => {
           if (i > 0) {
-            const itemQuantityContainer =
-              ele.children.namedItem('items-container').children[1];
-            const itemRateContainer =
-              ele.children.namedItem('items-container').children[2];
-            const itemTotalContainer =
-              ele.children.namedItem('items-container').children[3];
+            const itemQuantity =
+              ele.children.namedItem('items-container').children[1].children[1];
+            const itemRate =
+              ele.children.namedItem('items-container').children[2].children[1];
+            const itemTotal =
+              ele.children.namedItem('items-container').children[3].children[1];
 
-            // prettier-ignore
-            itemQuantityContainer.children[1].setAttribute('value', itemQuantityContainer.children[1].value)
-            // prettier-ignore
-            itemRateContainer.children[1].setAttribute('value', itemRateContainer.children[1].value)
-            // prettier-ignore
-            itemTotalContainer.children[1].setAttribute('value', itemTotalContainer.children[1].value)
+            itemQuantity.setAttribute('value', itemQuantity.value);
 
-            itemQuantityContainer.children[1].addEventListener('input', () => {
-              itemTotalContainer.children[1].value =
-                +itemQuantityContainer.children[1].value *
-                +itemRateContainer.children[1].value;
+            itemRate.setAttribute('value', itemRate.value);
 
-              // prettier-ignore
-              itemQuantityContainer.children[1].setAttribute('value', itemQuantityContainer.children[1].value)
-              // prettier-ignore
-              itemRateContainer.children[1].setAttribute('value', itemRateContainer.children[1].value)
-              // prettier-ignore
-              itemTotalContainer.children[1].setAttribute('value', +itemTotalContainer.children[1].value)
+            itemTotal.setAttribute('value', itemTotal.value);
 
-              if (itemQuantityContainer.children[1].value) {
-                itemQuantityContainer.children[1].classList.add(
-                  'border-[#4dee4d]'
-                );
-                itemQuantityContainer.children[1].classList.add(
-                  'shadow-[#4dee4d]'
-                );
-                itemQuantityContainer.children[1].classList.add('shadow-md');
-                itemQuantityContainer.children[1].classList.remove(
-                  'border-[red]'
-                );
-                itemQuantityContainer.children[1].classList.remove(
-                  'shadow-[red]'
-                );
-                itemQuantityContainer.children[1].classList.remove(
-                  'border-black'
-                );
-              } else {
-                itemQuantityContainer.children[1].classList.remove(
-                  'border-black'
-                );
-                itemQuantityContainer.children[1].classList.add('border-[red]');
-                itemQuantityContainer.children[1].classList.add('shadow-md');
-                itemQuantityContainer.children[1].classList.add('shadow-[red]');
-              }
+            itemQuantity.addEventListener('input', () => {
+              itemTotal.value = +itemQuantity.value * +itemRate.value;
+
+              itemQuantity.setAttribute('value', itemQuantity.value);
+
+              itemRate.setAttribute('value', itemRate.value);
+
+              itemTotal.setAttribute('value', +itemTotal.value);
+
+              toggleClass(itemQuantity);
             });
 
-            itemRateContainer.children[1].addEventListener('input', () => {
-              itemTotalContainer.children[1].value =
-                +itemQuantityContainer.children[1].value *
-                +itemRateContainer.children[1].value;
+            let click = 0;
+            itemRate.addEventListener('input', () => {
+              click++;
 
-              // prettier-ignore
-              +itemQuantityContainer.children[1].setAttribute('value', itemQuantityContainer.children[1].value)
-              // prettier-ignore
-              +itemRateContainer.children[1].setAttribute('value', itemRateContainer.children[1].value)
-              // prettier-ignore
-              +itemTotalContainer.children[1].setAttribute('value', itemTotalContainer.children[1].value)
+              itemTotal.value = +itemQuantity.value * +itemRate.value;
 
-              if (itemRateContainer.children[1].value) {
-                itemRateContainer.children[1].classList.add('border-[#4dee4d]');
-                itemRateContainer.children[1].classList.add('shadow-[#4dee4d]');
-                itemRateContainer.children[1].classList.add('shadow-md');
-                itemRateContainer.children[1].classList.remove('border-[red]');
-                itemRateContainer.children[1].classList.remove('shadow-[red]');
-                itemRateContainer.children[1].classList.remove('border-black');
-              } else {
-                itemRateContainer.children[1].classList.remove('border-black');
-                itemRateContainer.children[1].classList.add('border-[red]');
-                itemRateContainer.children[1].classList.add('shadow-md');
-                itemRateContainer.children[1].classList.add('shadow-[red]');
+              +itemQuantity.setAttribute('value', itemQuantity.value) +
+                itemRate.setAttribute('value', itemRate.value) +
+                itemTotal.setAttribute('value', itemTotal.value) +
+                itemTotal.setAttribute('click', click);
+
+              if (+itemTotal.getAttribute('click') === 1)
+                total.push(`${+itemTotal.getAttribute('value')} ${i}`);
+              else {
+                total.splice(
+                  total.findLastIndex(ele => +ele.slice(-1) === i),
+                  1,
+                  `${+itemTotal.getAttribute('value')} ${i}`
+                );
+
+                const values = total.map(ele => Number.parseInt(ele));
+                subTotal.value = values.reduce((prev, cur) => (prev += cur));
+
+                grandTotal.value =
+                  +subTotal.value + (+tax.value / 100) * +subTotal.value;
               }
+
+              toggleClass(itemRate);
             });
           }
         });
       };
 
-      listener();
+      calcTotalsListener();
 
       const itemNameListener = function () {
         const mainItems = [...main.children];
+
         mainItems.forEach((ele, i) => {
           if (!ele.textContent.includes('Invoice No')) {
             const itemName = ele.children[1].children[0].children[1];
             const itemNameHeader = ele.children[0];
+
             itemName.addEventListener('input', () => {
               itemNameHeader.textContent = itemName.value;
             });
 
-            if (itemName.value) {
-              itemName.classList.add('border-[#4dee4d]');
-              itemName.classList.add('shadow-[#4dee4d]');
-              itemName.classList.add('shadow-md');
-              itemName.classList.remove('border-[red]');
-              itemName.classList.remove('shadow-[red]');
-              itemName.classList.remove('border-black');
-            } else {
-              itemName.classList.remove('border-black');
-              itemName.classList.add('border-[red]');
-              itemName.classList.add('shadow-md');
-              itemName.classList.add('shadow-[red]');
-            }
+            toggleClass(itemName);
           }
         });
       };
 
-      let add = 1;
       function addItemListener() {
-        ++add;
+        ++addItemCount;
+
         main.innerHTML += `<section
         class="bg-[#fffdfd] m-7 rounded-lg border-2 text-center p-9 pt-5 border-fuchsia-500"
-
       >
-        <h3 class="text-2xl pb-3">Item ${add}</h3>
+        <h3 class="text-2xl pb-3">Item ${addItemCount}</h3>
         <div class="flex justify-evenly"   id="items-container">
           <div class="flex flex-col">
-            <label for="">Item Name</label>
+            <label>Item Name</label>
+
             <input
               type="text"
               class="border-black border"
-              placeholder="Item ${add}"
+              placeholder="Item ${addItemCount}"
               oninput="itemNameListener()"
               id="item-name"
               name="items"
@@ -343,7 +373,8 @@
           </div>
 
           <div class="flex flex-col">
-            <label for="">Item Quantity</label>
+            <label>Item Quantity</label>
+
             <input
               type="number"
               class="border-black border"
@@ -354,7 +385,8 @@
           </div>
 
           <div class="flex flex-col">
-            <label for="">Item Rate</label>
+            <label>Item Rate</label>
+
             <input
               type="number"
               class="border-black border"
@@ -365,12 +397,12 @@
           </div>
 
           <div class="flex flex-col">
-            <label for="">Item Total</label>
+            <label>Item Total</label>
+
             <input
               type="number"
               class="border-gray-300 border cursor-no-drop"
               value=""
-              name="subTotals"
               readonly
             />
           </div>
@@ -385,17 +417,12 @@
         </div>
       </section>`;
 
-        listener();
+        calcTotalsListener();
 
         const mainItems = [...main.children];
+
         mainItems.forEach((ele, i, arr) => {
           if (!ele.textContent.includes('Invoice No') && i < arr.length - 1) {
-            const itemQuantity =
-              ele.children.namedItem('items-container').children[1].children[1];
-            const itemRate =
-              ele.children.namedItem('items-container').children[2].children[1];
-            const itemTotal =
-              ele.children.namedItem('items-container').children[3].children[1];
             const itemName = ele.children[1].children[0].children[1];
             const itemNameHeader = ele.children[0];
             itemName.value = itemNameHeader.textContent;
@@ -403,20 +430,16 @@
         });
       }
 
-      let fromClicked = 0;
+      let fromBusinessClicked = 0;
       const fromHandler = () => {
-        fromClicked++;
-        if (!(fromClicked > 1)) {
-          from.options.remove(0);
-        }
+        fromBusinessClicked++;
+        if (!(fromBusinessClicked > 1)) from.options.remove(0);
       };
 
-      let toClicked = 0;
+      let toCustomerClicked = 0;
       const toHandler = () => {
-        toClicked++;
-        if (!(toClicked > 1)) {
-          to.options.remove(0);
-        }
+        toCustomerClicked++;
+        if (!(toCustomerClicked > 1)) to.options.remove(0);
       };
     </script>
   </body>

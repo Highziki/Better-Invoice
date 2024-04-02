@@ -78,7 +78,15 @@ const fetchBusinessCtrl = async (req, res) => {
       return res.render('errorPage', { error: '404. Not found' });
 
     // Find business
-    const business = await Business.findById(businessID);
+    const business = await Business.findById(businessID)
+      .populate({
+        path: 'invoices',
+        populate: { path: 'business' },
+      })
+      .populate({
+        path: 'invoices',
+        populate: { path: 'customer' },
+      });
 
     // Render businessDetails page
     res.render('businesses/businessDetails', { business });
